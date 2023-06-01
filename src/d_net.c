@@ -342,7 +342,7 @@ void NetUpdate(void)
     int gameticdiv;
 
     // check time
-    nowtime = I_GetTime(); /// ticdup;
+    nowtime = I_GetTime() / ticdup;
 
     newtics = nowtime - gametime;
     gametime = nowtime;
@@ -624,8 +624,6 @@ return;
             // i=2;
         } while (i < doomcom->numnodes);
     }
-    nodeingame[0] = 1;
-    nodeingame[1] = 1;
 #endif
 }
 
@@ -660,7 +658,7 @@ void D_CheckNetGame(void)
 
     if (netgame)
         D_ArbitrateNetStart();
-    deathmatch = 1;
+    deathmatch = 0;
     nomonsters = 1;
     startskill = sk_medium;
     startepisode = 1;
@@ -733,7 +731,7 @@ void TryRunTics(void)
     int numplaying;
 
     // get real tics
-    entertic = I_GetTime(); //(timekeeping >> 2);// /ticdup;
+    entertic = I_GetTime ()/ticdup;
 
     printf("entertic=%d\n", entertic);
     realtics = entertic - oldentertics;
@@ -753,7 +751,7 @@ void TryRunTics(void)
                 lowtic = nettics[i];
         }
     }
-    availabletics = lowtic - gametic; /// ticdup;
+    availabletics = lowtic - gametic/ ticdup;
 
     // decide how many tics to run
     if (realtics < availabletics - 1)
@@ -808,35 +806,28 @@ void TryRunTics(void)
     } // demoplayback
 
     // wait for new tics if needed
-    while (lowtic < gametic /*/ticdup*/ + counts)
+    while (lowtic < gametic /ticdup + counts)
     {
         NetUpdate();
         lowtic = MAXINT;
 
-        // for (i = 0; i < doomcom->numnodes; i++)
-        //     if (nodeingame[i] && nettics[i] < lowtic)
-        //         lowtic = nettics[i];
+        for (i = 0; i < doomcom->numnodes; i++)
+            if (nodeingame[i] && nettics[i] < lowtic)
+                lowtic = nettics[i];
 
-        // if (lowtic < gametic /*/ticdup*/)
-        //     I_Error("TryRunTics: lowtic < gametic");
-
-        // // don't stay in here forever -- give the menu a chance to work
-        // if (I_GetTime () - entertic >= 20)
-        // {
-        //     M_Ticker ();
-        //     return;
-        // }
+	// if (lowtic < gametic/ticdup)
+	//     I_Error ("TryRunTics: lowtic < gametic");
+				
+	// don't stay in here forever -- give the menu a chance to work
+	if (I_GetTime ()/ticdup - entertic >= 5)
+	{
+	    // M_Ticker ();
+	    // return;
+        
+        NetUpdate();
+        break;
+	} 
     }
-    // decide how many tics to run
-    if (realtics < availabletics - 1)
-        counts = realtics + 1;
-    else if (realtics < availabletics)
-        counts = realtics;
-    else
-        counts = availabletics;
-
-    if (counts < 1)
-        counts = 1;
 
     // run the count * ticdup dics
     while (counts--)
@@ -844,8 +835,8 @@ void TryRunTics(void)
         printf("ticdup=%d\n", ticdup);
         for (i = 0; i < ticdup; i++)
         {
-            if (gametic /*/ticdup*/ > lowtic)
-                I_Error("TryRunTics: gametic > lowtic");
+            // if (gametic /ticdup > lowtic)
+            //     I_Error("TryRunTics: gametic > lowtic");
             if (advancedemo)
                 D_DoAdvanceDemo();
             M_Ticker();

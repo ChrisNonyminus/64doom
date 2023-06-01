@@ -895,7 +895,7 @@ void D_DoomMain(void)
     console_clear();
     console_close();
 
-    debug_init_isviewer();
+    //debug_init_isviewer();
 
     // clear screen before game starts
     for(int i=0;i<2;i++)

@@ -120,7 +120,7 @@ extern int center_x, center_y;
 int main(int argc, char **argv)
 {
     console_init();
-	debug_init_isviewer();
+	//debug_init_isviewer();
     console_set_render_mode(RENDER_MANUAL);
     if (dfs_init( DFS_DEFAULT_LOCATION ) != DFS_ESUCCESS)
     {

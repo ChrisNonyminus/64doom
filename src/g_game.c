@@ -697,10 +697,10 @@ void G_Ticker (void)
 
             if (netgame && !netdemo && !(gametic%ticdup))
             {
-                if ((gametic > BACKUPTICS) && (consistancy[i][buf] != cmd->consistancy))
-                {
-                    I_Error("G_Ticker: consistency failure (%i should be %i)", cmd->consistancy, consistancy[i][buf]);
-                }
+                // if ((gametic > BACKUPTICS) && (consistancy[i][buf] != cmd->consistancy))
+                // {
+                //     I_Error("G_Ticker: consistency failure (%i should be %i)", cmd->consistancy, consistancy[i][buf]);
+                // }
 
                 if (players[i].mo)
                 {
@@ -742,7 +742,7 @@ void G_Ticker (void)
         } 
     }
     }
-    printf("gamestate=%d\n", gamestate);
+    //printf("gamestate=%d\n", gamestate);
     // do main actions
     switch (gamestate) 
     { 

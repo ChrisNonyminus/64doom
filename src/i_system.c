@@ -216,9 +216,9 @@ void I_Error(const char *fmt, ...)
     va_list args;
     va_start(args, fmt);
     vsnprintf(errstr, sizeof(errstr), fmt, args);
-    // in case we haven't reached I_InitGraphics yet
-    console_init();
-    printf("I_Error: %s\n", errstr);
+    // // in case we haven't reached I_InitGraphics yet
+    // console_init();
+    // printf("I_Error: %s\n", errstr);
 #if 1
     unlockVideo(_dc);
     for(int i=0;i<2;i++)
