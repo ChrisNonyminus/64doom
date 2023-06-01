@@ -39,6 +39,8 @@
 #endif
 #include "i_net.h"
 
+#include "unfloader/network.c"
+
 
 int get_counter = 0;
 int get_flag = 0;
@@ -107,12 +109,12 @@ BindToLocalPort
 //
 void PacketSend (void)
 {
-#if 0
+#if 1
 	doomdata_t	__attribute__((aligned(16))) send_sw;
     int		c;
 
     // byte swap
-    send_sw.checksum = htonl(netbuffer->checksum);
+    send_sw.checksum = (netbuffer->checksum);
     send_sw.player = netbuffer->player;
     send_sw.retransmitfrom = netbuffer->retransmitfrom;
     send_sw.starttic = netbuffer->starttic;
@@ -121,12 +123,14 @@ void PacketSend (void)
     {
 		send_sw.cmds[c].forwardmove = netbuffer->cmds[c].forwardmove;
 		send_sw.cmds[c].sidemove = netbuffer->cmds[c].sidemove;
-		send_sw.cmds[c].angleturn = htons(netbuffer->cmds[c].angleturn);
-		send_sw.cmds[c].consistancy = htons(netbuffer->cmds[c].consistancy);
+		send_sw.cmds[c].angleturn = (netbuffer->cmds[c].angleturn);
+		send_sw.cmds[c].consistancy = (netbuffer->cmds[c].consistancy);
 		send_sw.cmds[c].chatchar = netbuffer->cmds[c].chatchar;
 		send_sw.cmds[c].buttons = netbuffer->cmds[c].buttons;
     }
-#endif	
+#endif
+	network_udp_send_data(&send_sw, sizeof(send_sw));
+            //printf("Ping!\n");
 }
 
 //static int received_any = 0;
@@ -136,27 +140,45 @@ void PacketSend (void)
 //
 void PacketGet (void)
 {
-#if 0
+#if 1
 	doomdata_t	__attribute__((aligned(16))) recv_sw;
     int			i;
     int			c;
 
-    // byte swap
-    netbuffer->checksum = /*ntohl*/(recv_sw.checksum);
-    netbuffer->player = recv_sw.player;
-    netbuffer->retransmitfrom = recv_sw.retransmitfrom;
-    netbuffer->starttic = recv_sw.starttic;
-    netbuffer->numtics = recv_sw.numtics;
-	
-    for (c=0 ; c< netbuffer->numtics ; c++)
-    {
-		netbuffer->cmds[c].forwardmove = recv_sw.cmds[c].forwardmove;
-		netbuffer->cmds[c].sidemove = recv_sw.cmds[c].sidemove;
-		netbuffer->cmds[c].angleturn = /*ntohs*/(recv_sw.cmds[c].angleturn);
-		netbuffer->cmds[c].consistancy = /*ntohs*/(recv_sw.cmds[c].consistancy);
-		netbuffer->cmds[c].chatchar = recv_sw.cmds[c].chatchar;
-		netbuffer->cmds[c].buttons = recv_sw.cmds[c].buttons;
-    }	
+    int header;
+    if ((header = (usb_poll()))) {
+        if (USBHEADER_GETTYPE(header) == NETTYPE_UDP_DISCONNECT) {
+            // todo
+            return;
+        }
+        //printf("Got header %08X\n", header);
+        int type = USBHEADER_GETTYPE(header);
+        int size = USBHEADER_GETSIZE(header);
+        if (type == NETTYPE_UDP_SEND && size > 0) {
+            usb_read(&recv_sw, sizeof(recv_sw));
+            
+            //printf("Pong!\n");
+
+                // byte swap
+            netbuffer->checksum = ntohl(recv_sw.checksum);
+            netbuffer->player = recv_sw.player;
+            netbuffer->retransmitfrom = recv_sw.retransmitfrom;
+            netbuffer->starttic = recv_sw.starttic;
+            netbuffer->numtics = recv_sw.numtics;
+            
+            for (c=0 ; c< netbuffer->numtics ; c++)
+            {
+                netbuffer->cmds[c].forwardmove = recv_sw.cmds[c].forwardmove;
+                netbuffer->cmds[c].sidemove = recv_sw.cmds[c].sidemove;
+                netbuffer->cmds[c].angleturn = ntohs(recv_sw.cmds[c].angleturn);
+                netbuffer->cmds[c].consistancy = ntohs(recv_sw.cmds[c].consistancy);
+                netbuffer->cmds[c].chatchar = recv_sw.cmds[c].chatchar;
+                netbuffer->cmds[c].buttons = recv_sw.cmds[c].buttons;
+            }	
+        }
+    doomcom->datalength = sizeof(recv_sw);
+    } else doomcom->datalength = 0;
+
 #endif
 }
 
@@ -170,10 +192,10 @@ int GetLocalAddress (void)
 //
 void I_InitNetwork (void)
 {
-/*    boolean		trueval = true;
+    boolean		trueval = true;
     int			i;
     int			p;
-*/
+
 	
     doomcom = (doomcom_t*)malloc (sizeof (*doomcom));
     memset (doomcom, 0, sizeof(*doomcom));
@@ -206,8 +228,7 @@ void I_InitNetwork (void)
     
     // parse network game options,
     //  -net <consoleplayer> <host> <host> ...
-//    i = M_CheckParm ("-net");
-    if (1) //(!i)
+#ifndef NETBUILD
     {
 		// single player game
 		netgame = false;
@@ -217,19 +238,34 @@ void I_InitNetwork (void)
 		doomcom->consoleplayer = 0;
 		return;
     }
-    else
-    {
+#else
 		netsend = PacketSend;
 		netget = PacketGet;
 		netgame = true;
-    }
+
+        network_initialize();
 
   // parse player number and host list
  
-    doomcom->numnodes = 2;	// this node for sure
+    doomcom->numnodes = 1;	// this node for sure
+
+#ifdef NETSERVER // we're the server
+    char port[64];
+    itoa(DOOMPORT,port,10);
+    network_udp_start_server(port);
+    doomcom->consoleplayer = 1;
+#else // we're a client
+    char h[512] = {0};
+    sprintf(h, "localhost:%d", DOOMPORT);
+
+    network_udp_connect(h);
+    doomcom->consoleplayer = 0;
+#endif
+    doomcom->numnodes++;
 
     doomcom->id = DOOMCOM_ID;
     doomcom->numplayers = doomcom->numnodes;
+#endif
 }
 
 

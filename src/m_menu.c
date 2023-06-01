@@ -366,13 +366,14 @@ menu_t  OptionsDef =
     60,37,
     0
 };
+
 // VIDEO SETTINGS menu
 enum
 {
     detail,
     scrnsize,
     vid_empty0,
-    gamma,
+    x_gamma,
 	vid_empty1,
     vid_end
 } videoset_e;
@@ -1030,7 +1031,7 @@ void M_DrawVideoSettings(void)
     M_DrawThermo(VideoSettingsDef.x,VideoSettingsDef.y+LINEHEIGHT*(scrnsize+1),
                  9,screenSize);
 
-    M_DrawThermo(VideoSettingsDef.x,VideoSettingsDef.y+LINEHEIGHT*(gamma+1),
+    M_DrawThermo(VideoSettingsDef.x,VideoSettingsDef.y+LINEHEIGHT*(x_gamma+1),
                  5,usegamma);
 }
 

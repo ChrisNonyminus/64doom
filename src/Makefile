@@ -102,6 +102,140 @@ OBJS=						\
 		$(O)/info.o			\
 		$(O)/sounds.o			\
 		$(O)/i_main.o
+SERVER_OBJS=						\
+		$(O)/i_sound.o			\
+		$(O)/endoom.o			\
+		$(O)/dll.o			\
+		$(O)/hash.o			\
+		$(O)/lzfx.o			\
+		$(O)/i_video.o			\
+		$(O)/i_input.o			\
+		$(O)/doomdef.o			\
+		$(O)/doomstat.o			\
+		$(O)/dstrings.o			\
+		$(O)/i_system.o			\
+		$(O)_server/i_net.o			\
+		$(O)/tables.o			\
+		$(O)/r_draw.o			\
+		$(O)/v_video.o			\
+		$(O)/f_finale.o			\
+		$(O)/f_wipe.o 			\
+		$(O)/d_main.o			\
+		$(O)_server/d_net.o			\
+		$(O)/d_items.o			\
+		$(O)/g_game.o			\
+		$(O)/p_saveg.o			\
+		$(O)/m_menu.o			\
+		$(O)/m_misc.o			\
+		$(O)/m_argv.o  			\
+		$(O)/m_bbox.o			\
+		$(O)/m_cheat.o			\
+		$(O)/m_random.o			\
+		$(O)/am_map.o			\
+		$(O)/p_ceilng.o			\
+		$(O)/p_doors.o			\
+		$(O)/p_enemy.o			\
+		$(O)/p_floor.o			\
+		$(O)/p_inter.o			\
+		$(O)/p_lights.o			\
+		$(O)/p_map.o			\
+		$(O)/p_maputl.o			\
+		$(O)/p_plats.o			\
+		$(O)/p_pspr.o			\
+		$(O)/nodereorder.o		\
+		$(O)/p_setup.o			\
+		$(O)/p_sight.o			\
+		$(O)/p_spec.o			\
+		$(O)/p_switch.o			\
+		$(O)/p_mobj.o			\
+		$(O)/p_telept.o			\
+		$(O)/p_tick.o			\
+		$(O)/p_user.o			\
+		$(O)/r_bsp.o			\
+		$(O)/r_data.o			\
+		$(O)/r_main.o			\
+		$(O)/r_plane.o			\
+		$(O)/r_segs.o			\
+		$(O)/r_sky.o			\
+		$(O)/r_things.o			\
+		$(O)/w_wad.o			\
+		$(O)/wi_stuff.o			\
+		$(O)/z_zone.o			\
+		$(O)/st_lib.o			\
+		$(O)/st_stuff.o			\
+		$(O)/hu_stuff.o			\
+		$(O)/hu_lib.o			\
+		$(O)/s_sound.o			\
+		$(O)/info.o			\
+		$(O)/sounds.o			\
+		$(O)/i_main.o
+CLIENT_OBJS=						\
+		$(O)/i_sound.o			\
+		$(O)/endoom.o			\
+		$(O)/dll.o			\
+		$(O)/hash.o			\
+		$(O)/lzfx.o			\
+		$(O)/i_video.o			\
+		$(O)/i_input.o			\
+		$(O)/doomdef.o			\
+		$(O)/doomstat.o			\
+		$(O)/dstrings.o			\
+		$(O)/i_system.o			\
+		$(O)_client/i_net.o			\
+		$(O)/tables.o			\
+		$(O)/r_draw.o			\
+		$(O)/v_video.o			\
+		$(O)/f_finale.o			\
+		$(O)/f_wipe.o 			\
+		$(O)/d_main.o			\
+		$(O)_client/d_net.o			\
+		$(O)/d_items.o			\
+		$(O)/g_game.o			\
+		$(O)/p_saveg.o			\
+		$(O)/m_menu.o			\
+		$(O)/m_misc.o			\
+		$(O)/m_argv.o  			\
+		$(O)/m_bbox.o			\
+		$(O)/m_cheat.o			\
+		$(O)/m_random.o			\
+		$(O)/am_map.o			\
+		$(O)/p_ceilng.o			\
+		$(O)/p_doors.o			\
+		$(O)/p_enemy.o			\
+		$(O)/p_floor.o			\
+		$(O)/p_inter.o			\
+		$(O)/p_lights.o			\
+		$(O)/p_map.o			\
+		$(O)/p_maputl.o			\
+		$(O)/p_plats.o			\
+		$(O)/p_pspr.o			\
+		$(O)/nodereorder.o		\
+		$(O)/p_setup.o			\
+		$(O)/p_sight.o			\
+		$(O)/p_spec.o			\
+		$(O)/p_switch.o			\
+		$(O)/p_mobj.o			\
+		$(O)/p_telept.o			\
+		$(O)/p_tick.o			\
+		$(O)/p_user.o			\
+		$(O)/r_bsp.o			\
+		$(O)/r_data.o			\
+		$(O)/r_main.o			\
+		$(O)/r_plane.o			\
+		$(O)/r_segs.o			\
+		$(O)/r_sky.o			\
+		$(O)/r_things.o			\
+		$(O)/w_wad.o			\
+		$(O)/wi_stuff.o			\
+		$(O)/z_zone.o			\
+		$(O)/st_lib.o			\
+		$(O)/st_stuff.o			\
+		$(O)/hu_stuff.o			\
+		$(O)/hu_lib.o			\
+		$(O)/s_sound.o			\
+		$(O)/info.o			\
+		$(O)/sounds.o			\
+		$(O)/i_main.o
 
 $(PROG_NAME).z64: $(PROG_NAME).elf
 	$(OBJCOPY) $(PROG_NAME).elf $(PROG_NAME).bin -O binary
@@ -117,23 +251,62 @@ $(PROG_NAME).z64: $(PROG_NAME).elf
 	chmod ugo=rw $(PROG_NAME).z64
 	$(CHKSUM64PATH) $(PROG_NAME).z64
 
+$(PROG_NAME)_SERVER.z64: $(PROG_NAME)_SERVER.elf
+	$(OBJCOPY) $(PROG_NAME)_SERVER.elf $(PROG_NAME)_SERVER.bin -O binary
+	$(N64_SYM) $(PROG_NAME)_SERVER.elf $(PROG_NAME)_SERVER.sym
+	$(N64_DSOMSYM) $(PROG_NAME)_SERVER.elf $(PROG_NAME)_SERVER.msym
+	rm -f $(PROG_NAME)_SERVER.z64
+	rm -f rom.dfs
+	cp $(IWAD_DIRECTORY)/$(IWAD_PREFIX).WAD filesystem
+	echo $(IWAD_PREFIX).WAD > filesystem/identifier
+	$(MKDFSPATH) rom.dfs ./filesystem/
+	$(N64TOOL) \
+        --header $(HEADERPATH)/$(HEADERNAME) --title $(PROG_NAME) --toc --output $(PROG_NAME)_SERVER.z64 $(PROG_NAME)_SERVER.bin --align 8 $(PROG_NAME)_SERVER.sym --align 8 $(PROG_NAME)_SERVER.msym --align 16 rom.dfs
+	chmod ugo=rw $(PROG_NAME)_SERVER.z64
+	$(CHKSUM64PATH) $(PROG_NAME)_SERVER.z64
+
+$(PROG_NAME)_CLIENT.z64: $(PROG_NAME)_CLIENT.elf
+	$(OBJCOPY) $(PROG_NAME)_CLIENT.elf $(PROG_NAME)_CLIENT.bin -O binary
+	$(N64_SYM) $(PROG_NAME)_CLIENT.elf $(PROG_NAME)_CLIENT.sym
+	$(N64_DSOMSYM) $(PROG_NAME)_CLIENT.elf $(PROG_NAME)_CLIENT.msym
+	rm -f $(PROG_NAME)_CLIENT.z64
+	rm -f rom.dfs
+	cp $(IWAD_DIRECTORY)/$(IWAD_PREFIX).WAD filesystem
+	echo $(IWAD_PREFIX).WAD > filesystem/identifier
+	$(MKDFSPATH) rom.dfs ./filesystem/
+	$(N64TOOL) \
+        --header $(HEADERPATH)/$(HEADERNAME) --title $(PROG_NAME) --toc --output $(PROG_NAME)_CLIENT.z64 $(PROG_NAME)_CLIENT.bin --align 8 $(PROG_NAME)_CLIENT.sym --align 8 $(PROG_NAME)_CLIENT.msym --align 16 rom.dfs
+	chmod ugo=rw $(PROG_NAME)_CLIENT.z64
+	$(CHKSUM64PATH) $(PROG_NAME)_CLIENT.z64
+
 $(PROG_NAME).elf : $(OBJS)
 	$(LD) -o $(PROG_NAME).elf $(OBJS) $(LINK_FLAGS)
+$(PROG_NAME)_SERVER.elf: CFLAGS += -DNETBUILD -DNETSERVER
+$(PROG_NAME)_SERVER.elf : $(SERVER_OBJS)
+	$(LD) -o $(PROG_NAME)_SERVER.elf $(SERVER_OBJS) $(LINK_FLAGS)
+$(PROG_NAME)_CLIENT.elf: CFLAGS += -DNETBUILD -DNETCLIENT
+$(PROG_NAME)_CLIENT.elf : $(CLIENT_OBJS)
+	$(LD) -o $(PROG_NAME)_CLIENT.elf $(CLIENT_OBJS) $(LINK_FLAGS)
 
 # I used these for debugging in the past
 #	$(OBJDUMP) -t $(PROG_NAME).elf > $(PROG_NAME)_symbols.txt
 #	cat $(PROG_NAME)_symbols.txt | grep 'F .text' > $(PROG_NAME)_functions.txt
 
+
+all: $(PROG_NAME).z64 $(PROG_NAME)_SERVER.z64 $(PROG_NAME)_CLIENT.z64
+
 copy: $(PROG_NAME).z64
 	cp $(PROG_NAME).z64 ~/
-
-all: $(PROG_NAME).z64
 
 clean:
 	rm -f *.z64 *.elf *.o *.bin *.dfs *.txt
 	rm -f $(O)/*
 
 $(O)/%.o:	%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+$(O)_server/%.o:	%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+$(O)_client/%.o:	%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 #############################################################

@@ -1,0 +1,16 @@
+*.dfs
+*.WAD
+*.wad
+identifier
+obj/
+DOOM.bin
+*.elf
+*.msym
+*.sym
+*.z64
+src/DOOM_SERVER.bin
+src/DOOM_CLIENT.bin
+src/obj_client/d_net.o
+src/obj_client/i_net.o
+src/obj_server/d_net.o
+src/obj_server/i_net.o

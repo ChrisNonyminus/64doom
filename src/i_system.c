@@ -217,6 +217,7 @@ void I_Error(const char *fmt, ...)
     va_start(args, fmt);
     vsnprintf(errstr, sizeof(errstr), fmt, args);
     // in case we haven't reached I_InitGraphics yet
+    console_init();
     printf("I_Error: %s\n", errstr);
     unlockVideo(_dc);
     for(int i=0;i<2;i++)
@@ -228,7 +229,6 @@ void I_Error(const char *fmt, ...)
     D_QuitNetGame();
     I_ShutdownMusic();
     I_ShutdownSound();
-    I_ShutdownGraphics();
 
     while (1)
     {}
