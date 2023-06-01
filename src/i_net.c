@@ -253,13 +253,13 @@ void I_InitNetwork (void)
     char port[64];
     itoa(DOOMPORT,port,10);
     network_udp_start_server(port);
-    doomcom->consoleplayer = 1;
+    doomcom->consoleplayer = 0;
 #else // we're a client
     char h[512] = {0};
     sprintf(h, "localhost:%d", DOOMPORT);
 
     network_udp_connect(h);
-    doomcom->consoleplayer = 0;
+    doomcom->consoleplayer = 1;
 #endif
     doomcom->numnodes++;
 

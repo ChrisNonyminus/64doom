@@ -742,7 +742,7 @@ void G_Ticker (void)
         } 
     }
     }
-    
+    printf("gamestate=%d\n", gamestate);
     // do main actions
     switch (gamestate) 
     { 
