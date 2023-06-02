@@ -63,6 +63,7 @@ char backup_packet[DATALENGTH];
 //ntohl(x)
 #define ntohs(x) x
 //ntohs(x)
+void I_DebugPrint(const char *fmt, ...);
 
 void	NetSend (void);
 boolean NetListen (void);
@@ -157,7 +158,7 @@ void PacketGet (void)
         if (type == NETTYPE_UDP_SEND && size > 0) {
             usb_read(&recv_sw, sizeof(recv_sw));
             
-            //printf("Pong!\n");
+            printf("Pong!\n");
 
                 // byte swap
             netbuffer->checksum = ntohl(recv_sw.checksum);
@@ -169,6 +170,8 @@ void PacketGet (void)
             for (c=0 ; c< netbuffer->numtics ; c++)
             {
                 netbuffer->cmds[c].forwardmove = recv_sw.cmds[c].forwardmove;
+                char msg[512];
+                I_DebugPrint( "netbuffer->cmds[c].forwardmove=%d",netbuffer->cmds[c].forwardmove);
                 netbuffer->cmds[c].sidemove = recv_sw.cmds[c].sidemove;
                 netbuffer->cmds[c].angleturn = ntohs(recv_sw.cmds[c].angleturn);
                 netbuffer->cmds[c].consistancy = ntohs(recv_sw.cmds[c].consistancy);

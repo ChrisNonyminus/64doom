@@ -891,9 +891,8 @@ void D_DoomMain(void)
     }
 
     // clear the console as part of clearing screen before game starts
-    console_set_render_mode(RENDER_MANUAL);
-    console_clear();
-    console_close();
+    // console_clear();
+    // console_close();
 
     //debug_init_isviewer();
 

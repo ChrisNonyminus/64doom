@@ -199,7 +199,7 @@ void DebugOutput_String_For_IError(const char *str, int lineNumber, int good)
         char copied_line[ERROR_LINE_LEN + 1] = {'\0'};
         if (0 == i)
         {
-            strncpy(copied_line, "I_Error:", ERROR_LINE_LEN);
+            strncpy(copied_line, "", ERROR_LINE_LEN);
         }
         else
         {
@@ -234,4 +234,24 @@ void I_Error(const char *fmt, ...)
 
     while (1)
     {}
+}
+
+
+void I_DebugPrint(const char *fmt, ...)
+{   
+    char errstr[256];
+    va_list args;
+    va_start(args, fmt);
+    vsnprintf(errstr, sizeof(errstr), fmt, args);
+    // // in case we haven't reached I_InitGraphics yet
+    // console_init();
+    printf("I_DebugPrint: %s\n", errstr);
+#if 1
+    for(int i=0;i<2;i++)
+    {
+        //_dc = lockVideo(1);
+        DebugOutput_String_For_IError(errstr, 0, 1);
+        //unlockVideo(_dc);
+    }    
+#endif
 }

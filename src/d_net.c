@@ -278,33 +278,33 @@ void GetPackets(void)
         else
             resendcount[netnode]--;
 
-        // check for out of order / duplicated packet
-        if (realend == nettics[netnode])
-        {
-            // return;
-            continue;
-        }
+        // // check for out of order / duplicated packet
+        // if (realend == nettics[netnode])
+        // {
+        //     // return;
+        //     continue;
+        // }
 
-        if (realend < nettics[netnode])
-        {
-            //    if (debugfile)
-            /*fprintf (debugfile,
-               "out of order packet (%i + %i)\n" ,
-               realstart,netbuffer->numtics);*/
-            continue;
-        }
+        // if (realend < nettics[netnode])
+        // {
+        //     //    if (debugfile)
+        //     /*fprintf (debugfile,
+        //        "out of order packet (%i + %i)\n" ,
+        //        realstart,netbuffer->numtics);*/
+        //     continue;
+        // }
 
-        // check for a missed packet
-        if (realstart > nettics[netnode])
-        {
-            // stop processing until the other system resends the missed tics
-            /*if (debugfile)
-                fprintf (debugfile,
-                 "missed tics from %i (%i - %i)\n",
-                 netnode, realstart, nettics[netnode]);*/
-            remoteresend[netnode] = true;
-            continue;
-        }
+        // // check for a missed packet
+        // if (realstart > nettics[netnode])
+        // {
+        //     // stop processing until the other system resends the missed tics
+        //     /*if (debugfile)
+        //         fprintf (debugfile,
+        //          "missed tics from %i (%i - %i)\n",
+        //          netnode, realstart, nettics[netnode]);*/
+        //     remoteresend[netnode] = true;
+        //     continue;
+        // }
 
         // update command store from the packet
         {
