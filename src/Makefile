@@ -49,7 +49,6 @@ OBJS=						\
 		$(O)/dstrings.o			\
 		$(O)/i_system.o			\
 		$(O)/i_net.o			\
-		$(O)/tables.o			\
 		$(O)/r_draw.o			\
 		$(O)/v_video.o			\
 		$(O)/f_finale.o			\
@@ -300,7 +299,7 @@ copy: $(PROG_NAME).z64
 	cp $(PROG_NAME).z64 ~/
 
 clean:
-	rm -f *.z64 *.elf *.o *.bin *.dfs *.txt
+	rm -f *.z64 *.elf *.msym *.sym *.bin *.dfs
 	rm -f $(O)/*
 
 $(O)/%.o:	%.c
