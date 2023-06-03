@@ -158,7 +158,7 @@ void PacketGet (void)
         if (type == NETTYPE_UDP_SEND && size > 0) {
             usb_read(&recv_sw, sizeof(recv_sw));
             
-            printf("Pong!\n");
+            //printf("Pong!\n");
 
                 // byte swap
             netbuffer->checksum = ntohl(recv_sw.checksum);
@@ -171,9 +171,9 @@ void PacketGet (void)
             {
                 netbuffer->cmds[c].forwardmove = recv_sw.cmds[c].forwardmove;
                 char msg[512];
-                I_DebugPrint( "netbuffer->cmds[c].forwardmove=%d",netbuffer->cmds[c].forwardmove);
                 netbuffer->cmds[c].sidemove = recv_sw.cmds[c].sidemove;
                 netbuffer->cmds[c].angleturn = ntohs(recv_sw.cmds[c].angleturn);
+                //I_DebugPrint( "netbuffer->cmds[c].angleturn=%d",netbuffer->cmds[c].angleturn);
                 netbuffer->cmds[c].consistancy = ntohs(recv_sw.cmds[c].consistancy);
                 netbuffer->cmds[c].chatchar = recv_sw.cmds[c].chatchar;
                 netbuffer->cmds[c].buttons = recv_sw.cmds[c].buttons;

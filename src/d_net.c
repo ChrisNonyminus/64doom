@@ -664,8 +664,7 @@ void D_CheckNetGame(void)
     startepisode = 1;
     startmap = 1;
 
-    printf("startskill %i  deathmatch: %i  startmap: %i  startepisode: %i\n",
-           startskill, deathmatch, startmap, startepisode);
+
 
     // read values out of doomcom
     ticdup = doomcom->ticdup;
@@ -678,8 +677,7 @@ void D_CheckNetGame(void)
     for (i = 0; i < doomcom->numnodes; i++)
         nodeingame[i] = true;
 
-    printf("player %i of %i (%i nodes)\n", consoleplayer + 1,
-           doomcom->numplayers, doomcom->numnodes);
+    
 }
 
 //
@@ -832,7 +830,6 @@ void TryRunTics(void)
     // run the count * ticdup dics
     while (counts--)
     {
-        printf("ticdup=%d\n", ticdup);
         for (i = 0; i < ticdup; i++)
         {
             // if (gametic /ticdup > lowtic)
@@ -840,7 +837,6 @@ void TryRunTics(void)
             if (advancedemo)
                 D_DoAdvanceDemo();
             M_Ticker();
-            printf("gametic=%d\n", gametic);
             G_Ticker();
             gametic++;
 
